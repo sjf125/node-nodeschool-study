@@ -1,17 +1,21 @@
-var fs = require('fs');
+//module-file.js
 var path = require('path');
+var fs = require('fs');
 
-var mydir = process.argv[2];
-var ext1 = '.' + process.argv[3];
+module.exports = function(pathFile, ext, callback){
+    ext = '.' + ext;
 
-fs.readdir(mydir, function(err, files){
-  if(err){
-    throw err
-  }
-  files.forEach(function(filename){
-    var ext = path.extname(filename);
-    if(ext == ext1){
-      console.log(filename);
-    }
-  });
-});
+    fs.readdir(pathFile, function(err, list){
+        if (err){
+            return callback(err);
+        }
+
+        var filtered=[];
+        list.forEach(function(file){
+            if(path.extname(file) === ext){
+                filtered.push(file);
+            }
+        });
+        return callback(null, filtered);
+    });
+}
